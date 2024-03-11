@@ -1,4 +1,5 @@
 import leogAPI from 'api/leogAPI';
+import { FormData } from 'interfaces/cursos';
 import { CursosI } from 'interfaces/cursos';
 
 export const getCursos = async () => {
@@ -6,9 +7,17 @@ export const getCursos = async () => {
   return data;
 };
 
-export const addCurso = async (data: CursosI) => {
-  const response = await leogAPI.post(`/admin/cursos`, data);
-  return response.data;
+export const addCurso = async (data: FormData) => {
+  try {
+    const response = await leogAPI.post(`/admin/cursos`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('No se pudo agregar el curso');
+  }
 };
 
 export const eliminarCurso = async (id: number) => {

@@ -31,19 +31,33 @@ const CoursesPage = () => {
 
   const fetchAddCurso = async (data: CursosI) => {
     try {
-      const response = await addCurso(data);
+
+      const formData = new FormData();
+      formData.append('nombre', data.nombre);
+      formData.append('video_iframe', data.video_iframe);
+      formData.append('categoria_id', Number(data.categoria_id).toString());
+      formData.append('descripcion', data.descripcion);
+      formData.append('file', data.file[0]);
+
+      //console.log(data)
+      const response = await addCurso(formData);
+      //console.log(response)
       toast.success(response.message);
       reset();
       fetchCursos();
       setShowModalAdd(false);
     } catch (error) {
+      console.log(error)
       toast.error('No se pudo agregar el curso');
     }
   };
 
+
+
   const fetchCursos = async () => {
     try {
       const response = await getCursos();
+      console.log(response.cursos)
       setCourses(response.cursos);
     } catch (error) {
       toast.error('No se pudo cargar la lista de categorías');
@@ -189,12 +203,7 @@ const CoursesPage = () => {
                 <label htmlFor="urlImagen" className="form-label">
                   URL Imagen
                 </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="urlImagen"
-                  {...register('imagen_url', { required: true })}
-                />
+                <input className="form-control" type="file" id="formFile" {...register('file', { required: true })} onChange={handleFileChange} />
               </div>
               <div className="mb-3">
                 <label htmlFor="urlVideo" className="form-label">
