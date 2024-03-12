@@ -99,10 +99,16 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (categoriaSeleccionada?.id) {
-      fetchCategoriaById(categoriaSeleccionada.id);
+    if (showModalEdit) {
+      fetchCategoriaById(categoriaSeleccionada?.id!);
     }
-  }, [categoriaSeleccionada]);
+  }, [showModalEdit]);
+
+  useEffect(() => {
+    if (showModalAdd) {
+      reset();
+    }
+  }, [showModalAdd]);
 
   if (isLoading) {
     return <Loader />;
