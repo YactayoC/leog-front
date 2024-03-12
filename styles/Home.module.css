@@ -122,3 +122,23 @@
   opacity: 0.5;
   transform: scale(1.1);
 }
+
+.commentsList {
+  padding: 0;
+  width: '20rem';
+}
+
+.comment {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.commentHeader {
+  font-weight: bold;
+}
+
+.commentBody {
+  margin-top: 5px;
+}
