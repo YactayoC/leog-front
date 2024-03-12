@@ -6,12 +6,14 @@ import { useForm } from 'react-hook-form';
 import { Modal } from 'react-responsive-modal';
 
 import AdminLayout from 'components/layouts/AdminLayout';
-import { addCurso, getCursos, eliminarCurso } from 'services/cursos';
+import { addCurso, getCursos, eliminarCurso, updateCurso } from 'services/cursos';
 import { CursosI } from '../../../interfaces/cursos';
 import Loader from 'components/loader/loader';
 import { getCategorias } from 'services/categorias';
 import { CategoryI } from 'interfaces/categorias';
 import styles from '../Courses.module.css';
+import { da } from 'date-fns/locale';
+import { ModalEditCourse } from 'components/modal/ModalEditCourse';
 
 const CoursesPage = () => {
   const [courses, setCourses] = useState<CursosI[]>([{} as CursosI]);
@@ -38,10 +40,8 @@ const CoursesPage = () => {
       formData.append('categoria_id', Number(data.categoria_id).toString());
       formData.append('descripcion', data.descripcion);
       formData.append('file', data.file[0]);
-
-      //console.log(data)
+      console.log(data)
       const response = await addCurso(formData);
-      //console.log(response)
       toast.success(response.message);
       reset();
       fetchCursos();
@@ -52,12 +52,10 @@ const CoursesPage = () => {
     }
   };
 
-
-
   const fetchCursos = async () => {
     try {
       const response = await getCursos();
-      console.log(response.cursos)
+      //onsole.log(response.cursos)
       setCourses(response.cursos);
     } catch (error) {
       toast.error('No se pudo cargar la lista de categorías');
@@ -94,6 +92,13 @@ const CoursesPage = () => {
     const objectURL = URL.createObjectURL(file);
     setFileSelected(objectURL);
   };
+
+  const handleFileChangeEditModal = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0];
+    const objectURL = URL.createObjectURL(file);
+    //LIMPIA EL INPUT DE LA IMG
+    setFileSelected(objectURL);
+  }
 
   useEffect(() => {
     fetchCursos();
@@ -254,87 +259,7 @@ const CoursesPage = () => {
           </div>
         </Modal>
 
-        <Modal open={showModalEdit} onClose={() => setShowModalEdit(false)} center>
-          <div className="modal-header">
-            <h1 className="modal-title fs-5">Editar Curso</h1>
-          </div>
-          <div className="modal-body">
-            <form>
-              <div className="mb-3">
-                <label htmlFor="nombre" className="form-label">
-                  Nombre
-                </label>
-                <input type="text" className="form-control" id="nombre" defaultValue={cursoSeleccionado?.nombre} />
-              </div>
-              <div className="mb-3">
-                <div></div>
-                <label htmlFor="formFile" className="form-label">
-                  Url Imagen
-                </label>
-                <input className="form-control" type="file" id="formFile" onChange={handleFileChange} />
-                {fileSelected ? (
-                  <div className="d-flex flex-column gap-2">
-                    <img src={fileSelected} alt="Imagen" style={{ width: '100px' }} />
-                    <button
-                      type="button"
-                      style={{
-                        width: 'fit-content',
-                      }}
-                      className="btn btn-primary"
-                      onClick={() => setFileSelected(null)}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <img src={cursoSeleccionado?.imagen_url} alt="Imagen" style={{ width: '100px' }} />
-                  </>
-                )}
-              </div>
-              <div className="mb-3">
-                <label htmlFor="urlVideo" className="form-label">
-                  URL Video Iframe
-                </label>
-                <input type="text" className="form-control" id="urlVideo" />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="selectOption" className="form-label">
-                  Selecciona una opción
-                </label>
-                <select
-                  className="form-select"
-                  id="selectOption"
-                  aria-label="Selecciona una opción"
-                  defaultValue={`${cursoSeleccionado.categoria_id!}`}
-                >
-                  <option value="">Selecciona...</option>
-                  {categorias?.map((category: CategoryI) => (
-                    <option value={category.id} key={category.id + 20}>
-                      {category.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="comments" className="form-label">
-                  Comentarios
-                </label>
-                <textarea
-                  className="form-control"
-                  id="comments"
-                  placeholder="Escribe tus comentarios aquí"
-                  defaultValue={cursoSeleccionado?.descripcion}
-                ></textarea>
-              </div>
-              <div className="d-flex justify-content-center">
-                <button type="submit" className="btn btn-primary w-50">
-                  Editar
-                </button>
-              </div>
-            </form>
-          </div>
-        </Modal>
+        <ModalEditCourse open={showModalEdit} onClose={() => setShowModalEdit(false)} idCurso={cursoSeleccionado.id!} onCourseEdit={fetchCursos} />
 
         <Modal open={showModalDelete} onClose={() => setShowModalDelete(false)} center>
           <div className="modal-header">
