@@ -9,7 +9,7 @@ import { useAppDispatch } from 'hooks';
 import { onSelectMovie } from 'store/movies';
 
 interface Props {
-  movie: TMovie;
+  movie: any;
 }
 
 const Course: FC<Props> = ({ movie }) => {
@@ -21,10 +21,13 @@ const Course: FC<Props> = ({ movie }) => {
     router.push(`/home/movie/${movie.uid}`);
   };
 
+  console.log(movie)
+
   return (
+
     <div className="card">
       <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/View_of_Empire_State_Building_from_Rockefeller_Center_New_York_City_dllu_%28cropped%29.jpg/640px-View_of_Empire_State_Building_from_Rockefeller_Center_New_York_City_dllu_%28cropped%29.jpg"
+        src={movie.imagen_url}
         className="card-img-top"
         alt="..."
       />
