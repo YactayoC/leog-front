@@ -2,9 +2,6 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 
-import styles from 'styles/Home.module.css';
-import { useAppDispatch } from 'hooks';
-import { onSelectMovie } from 'store/movies';
 import { CursoItemI } from 'interfaces/cursoItem';
 
 interface Props {
@@ -12,16 +9,14 @@ interface Props {
 }
 
 const Course: FC<Props> = ({ cursoItem }) => {
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const onClickSelectMovie = () => {
-    dispatch(onSelectMovie(cursoItem));
-    router.push(`/home/movie/${cursoItem.id}`);
+  const onClickSelectCourse = () => {
+    router.push({
+      pathname: `/home/course/${cursoItem.id}`,
+      query: { cursoItem: JSON.stringify(cursoItem) }
+    });
   };
-
-  console.log(cursoItem)
-
   return (
 
     <div className="card" style={{
@@ -43,7 +38,7 @@ const Course: FC<Props> = ({ cursoItem }) => {
         <p className="card-text" style={{ marginTop: '2rem' }}>
           {cursoItem.descripcion}
         </p>
-        <a href="#" className="btn btn-primary">
+        <a className="btn btn-primary" onClick={onClickSelectCourse}>
           Obtener detalles
         </a>
       </div>

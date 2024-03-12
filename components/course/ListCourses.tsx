@@ -8,7 +8,6 @@ interface Props {
 }
 
 const ListCourses: FC<Props> = ({ items }) => {
-  console.log(items)
 
   return (
     <div className={styles.movies}>

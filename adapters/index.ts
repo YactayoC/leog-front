@@ -1,1 +1,1 @@
-export * from './movies.adapter';
+
