@@ -93,13 +93,6 @@ const CoursesPage = () => {
     setFileSelected(objectURL);
   };
 
-  const handleFileChangeEditModal = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0];
-    const objectURL = URL.createObjectURL(file);
-    //LIMPIA EL INPUT DE LA IMG
-    setFileSelected(objectURL);
-  }
-
   useEffect(() => {
     fetchCursos();
     fetchCategorias();

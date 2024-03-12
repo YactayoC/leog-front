@@ -16,7 +16,7 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
   if (isLoading) {
     return <Loader />;
   }
-  console.log(courseContent)
+  //log(courseContent)
 
   const comentariosMock = [
     { id: 1, texto: '¡Excelente curso!', usuario: 'Usuario1' },
