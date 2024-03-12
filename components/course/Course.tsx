@@ -2,42 +2,49 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 
-import { TMovie } from 'interfaces/movies';
-
 import styles from 'styles/Home.module.css';
 import { useAppDispatch } from 'hooks';
 import { onSelectMovie } from 'store/movies';
+import { CursoItemI } from 'interfaces/cursoItem';
 
 interface Props {
-  movie: any;
+  cursoItem: CursoItemI;
 }
 
-const Course: FC<Props> = ({ movie }) => {
+const Course: FC<Props> = ({ cursoItem }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const onClickSelectMovie = () => {
-    dispatch(onSelectMovie(movie));
-    router.push(`/home/movie/${movie.uid}`);
+    dispatch(onSelectMovie(cursoItem));
+    router.push(`/home/movie/${cursoItem.id}`);
   };
 
-  console.log(movie)
+  console.log(cursoItem)
 
   return (
 
-    <div className="card">
+    <div className="card" style={{
+      width: '30rem',
+    }}>
       <img
-        src={movie.imagen_url}
+        src={cursoItem.imagen_url}
         className="card-img-top"
+        style={{
+          height: '20rem',
+          objectFit: 'cover',
+        }}
         alt="..."
       />
       <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-          Some quick example text to build on the card title and make up the bulk of the cards content.
+        <h5 className="card-title">
+          {cursoItem.nombre}
+        </h5>
+        <p className="card-text" style={{ marginTop: '2rem' }}>
+          {cursoItem.descripcion}
         </p>
         <a href="#" className="btn btn-primary">
-          Go somewhere
+          Obtener detalles
         </a>
       </div>
     </div>

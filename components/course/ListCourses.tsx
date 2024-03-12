@@ -13,7 +13,7 @@ const ListCourses: FC<Props> = ({ items }) => {
   return (
     <div className={styles.movies}>
       {items.map((item, index) => (
-        <Course key={index} movie={item} />
+        <Course key={index} cursoItem={item} />
       ))}
     </div>
   );

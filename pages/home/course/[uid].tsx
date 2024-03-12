@@ -5,13 +5,13 @@ import { HomeLayout, Navbar } from 'components';
 import { formatDate, formatMoney } from 'utils';
 import { getMovieDetailsAPI } from 'services';
 import { createMovieDetailsAdapter } from 'adapters';
-import { TMovie } from 'interfaces/movies';
+//import { TMovie } from 'interfaces/movies';
 import Loader from 'components/loader/loader';
 
 import styles from 'styles/Movie.module.css';
 
 interface Props {
-  movieDetail: TMovie;
+  movieDetail: any;
   isLoading: boolean;
 }
 

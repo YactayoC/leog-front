@@ -14,3 +14,13 @@ export const eliminarCategoria = async (id: number) => {
   const response = await leogAPI.delete(`/admin/categorias/${id}`);
   return response.data;
 };
+
+export const editarCategoria = async (id: number, data: { nombre: string; descripcion: string }) => {
+  const response = await leogAPI.put(`/admin/categorias/${id}`, data);
+  return response.data;
+};
+
+export const obtenerCategoriaPorId = async (id: number) => {
+  const response = await leogAPI.get(`/admin/categorias/${id}`);
+  return response.data;
+};

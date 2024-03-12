@@ -5,7 +5,7 @@ import AdminLayout from 'components/layouts/AdminLayout';
 import styles from '../Courses.module.css';
 import { useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
-import { addCategoria, eliminarCategoria, getCategorias } from 'services/categorias';
+import { addCategoria, editarCategoria, eliminarCategoria, getCategorias, obtenerCategoriaPorId } from 'services/categorias';
 import Loader from 'components/loader/loader';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
@@ -24,6 +24,7 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  const [categoryDataById, setCategoryDataById] = useState<CategoryI>();
   const {
     handleSubmit,
     register,
@@ -42,6 +43,20 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
       toast.error('No se pudo agregar la categoria');
     }
   };
+
+  const handleEditCategoria = async (id: number, data: CategoryI) => {
+    try {
+      const response = await editarCategoria(id, data);
+      console.log(response)
+      toast.success(response.message);
+      reset();
+      fetchCategorias();
+      setShowModalEdit(false);
+      console.log(data)
+    } catch (error) {
+      toast.error('No se pudo editar la categoria');
+    }
+  }
 
   const fetchCategorias = async () => {
     try {
@@ -66,12 +81,28 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
     }
   };
 
+  const fetchCategoriaById = async (id: number) => {
+    try {
+      const response = await obtenerCategoriaPorId(id);
+      console.log(response.categoria[0])
+      setCategoryDataById(response.categoria[0]);
+    } catch (error) {
+      toast.error('No se pudo cargar la categoria');
+    }
+  }
+
   useEffect(() => {
     if (responseCategorias) {
       setCategories(responseCategorias);
       setIsLoading(isLoadingFetch);
     }
   }, []);
+
+  useEffect(() => {
+    if (categoriaSeleccionada?.id) {
+      fetchCategoriaById(categoriaSeleccionada.id);
+    }
+  }, [categoriaSeleccionada]);
 
   if (isLoading) {
     return <Loader />;
@@ -154,7 +185,8 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
                 <label htmlFor="nombre" className="form-label">
                   Nombre
                 </label>
-                <input type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
+                <input
+                  type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
               </div>
 
               <div className="mb-3">
@@ -180,22 +212,45 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
         <Modal open={showModalEdit} onClose={() => setShowModalEdit(false)} center>
           <div className="modal-header">
             <h1 className="modal-title fs-5">Editar Curso</h1>
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>M
           </div>
           <div className="modal-body">
-            <form>
+            <form onSubmit={handleSubmit(() => handleEditCategoria(categoriaSeleccionada?.id!, categoryDataById!))}>
               <div className="mb-3">
                 <label htmlFor="nombre" className="form-label">
                   Nombre
                 </label>
-                <input type="text" className="form-control" id="nombre" />
+                <input
+                  type="text"
+                  className="form-control"
+                  id="nombre"
+                  {...register('nombre', { required: false })}
+                  value={categoryDataById?.nombre || ''}
+                  onChange={(e) => {
+                    setCategoryDataById((prevState) => ({
+                      ...prevState!,
+                      nombre: e.target.value,
+                    }));
+                  }}
+                />
               </div>
 
               <div className="mb-3">
                 <label htmlFor="comments" className="form-label">
                   Descripcion
                 </label>
-                <textarea className="form-control" id="comments" placeholder="Escribe la descripcion aquí"></textarea>
+                <textarea
+                  className="form-control"
+                  id="comments"
+                  placeholder="Escribe la descripcion aquí"
+                  value={categoryDataById?.descripcion}
+                  {...register('descripcion', { required: false })}
+                  onChange={(e) => {
+                    setCategoryDataById((prevState) => ({
+                      ...prevState!,
+                      descripcion: e.target.value,
+                    }));
+                  }}
+                ></textarea>
               </div>
               <div className="d-flex justify-content-center">
                 <button type="submit" className="btn btn-primary w-50">
@@ -229,9 +284,9 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
             </div>
           </div>
         </Modal>
-      </div>
+      </div >
       <ToastContainer />
-    </AdminLayout>
+    </AdminLayout >
   );
 };
 
