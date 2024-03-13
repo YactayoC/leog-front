@@ -50,24 +50,25 @@ const HomePage = () => {
   }
 
   return (
-    <HomeLayout title="ReMovies">
-      <div className={styles.hero}>
-        <Navbar />
-      </div>
-      <div className={styles.allMovies}>
-        <div className={styles.movieCategory}>
+    <>
+      <HomeLayout title="ReMovies">
+        <div className={styles.hero}>
+          <Navbar />
+        </div>
+
+
+        <div className={styles.allMovies} >
           {categories
             .filter(category => courses.filter(curso => curso.categoria_id === category.id).length > 0)
             .map((category) => (
-              <div key={category.id}>
+              <div className={styles.movieCategory} key={category.id}>
                 <h2>{category.nombre}</h2>
                 <ListCourses items={courses.filter((curso) => curso.categoria_id === category.id)} />
               </div>
             ))}
         </div>
-      </div>
-
-    </HomeLayout>
+      </HomeLayout>
+    </>
   );
 };
 
